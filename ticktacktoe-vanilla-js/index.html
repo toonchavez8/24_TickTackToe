@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TickTackToe</title>
+
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="index.css">
+    <script src="index.js" defer></script>
+</head>
+
+<body>
+
+    <main>
+        <section class="grid">
+
+            <!-- turn board -->
+            <div class="turn">
+                <i class="fa-solid fa-x turquoise">X</i>
+                <p class="turquoise">Player 1, you're up!</p>
+            </div>
+
+            <!-- Dropdown menu -->
+
+            <nav class="actions">
+                <button class="menu-btn" data-id="menu-btn">
+                    Actions
+                    <i class="fa-solid fa-chevron-down">v</i>
+                </button>
+
+                <div class="items border hidden" data-id="menu-items">
+                    <button data-id="reset-btn">Reset</button>
+                    <button data-id="new-round-btn">New Round</button>
+                </div>
+            </nav>
+            <!-- game board -->
+            <div class="square shadow"></div>
+            <div class="square shadow"></div>
+            <div class="square shadow"></div>
+            <div class="square shadow"></div>
+            <div class="square shadow"></div>
+            <div class="square shadow"></div>
+            <div class="square shadow"></div>
+            <div class="square shadow"></div>
+            <div class="square shadow"></div>
+
+            <!-- Scoreboard -->
+            <div class="score shadow" style="background-color: var(--turquoise)">
+                <p>Player 1</p>
+                <span data-id="p1-wins">0 Wins</span>
+            </div>
+            <div class="score shadow" style="background-color: var(--light-gray)">
+                <p>Ties</p>
+                <span data-id="ties">0</span>
+            </div>
+            <div class="score shadow" style="background-color: var(--yellow)">
+                <p>Player 2</p>
+                <span data-id="p2-wins">0 Wins</span>
+            </div>
+
+        </section>
+    </main>
+
+    <footer>
+
+        <p>
+            tutorial by
+            <a href="https://twitter.com/zg_dev" style="color: var(--turquoise)">@zg_dev</a>
+        </p>
+
+        <p>
+            followed by
+            <a href="https://twitter.com/zg_dev" style="color: var(--yellow)">@toonchavez</a>
+        </p>
+
+    </footer>
+
+    <!-- Modal that opens when game ends -->
+    <div class="modal hidden " data-id="modal">
+        <div class="modal-contents">
+            <p data-id="modal-text">Player 1 wins!</p>
+            <button data-id="modal-btn">Play again</button>
+        </div>
+    </div>
+</body>
+
+</html>
