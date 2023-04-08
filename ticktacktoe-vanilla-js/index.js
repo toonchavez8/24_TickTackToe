@@ -8,6 +8,12 @@ const APP = {
 		newRoundBtn: document.querySelector('[data-id="new-round-btn"]'),
 		tile: document.querySelectorAll('[data-id="tile"]'),
 	},
+
+	// here we track the current state of who is the player
+	state: {
+		currentPlayer: 2,
+	},
+
 	// function inicializer to add our event listeners
 	init() {
 		APP.registerEventListners();
@@ -20,6 +26,7 @@ const APP = {
 			// toggle adds and removes the keyword within the function
 			APP.$.actionItems.classList.toggle("hidden");
 		});
+
 		//TODO
 		APP.$.resetBtn.addEventListener("click", (event) => {
 			console.log("reset the game");
@@ -30,9 +37,26 @@ const APP = {
 
 		APP.$.tile.forEach((tile) => {
 			tile.addEventListener("click", (event) => {
-				console.log(`tile with id ${event.target.id} was clicked    `);
+				console.log(`tile with id ${event.target.id} was clicked`);
+
+				console.log(`Current Player is ${APP.state.currentPlayergi}`);
+
+				// we declare icon and create the element
 				const icon = document.createElement("i");
-				icon.classList.add("fa-solid", "fa-x", "turqoise");
+
+				//State is tracked
+				const currentPlayer = APP.state.currentPlayer;
+
+				if (currentPlayer === 1) {
+					icon.textContent = "X";
+					icon.classList.add("fa-solid", "fa-x", "turquoise");
+				} else {
+					icon.textContent = "O";
+					icon.classList.add("fa-solid", "fa-x", "yellow");
+				}
+
+				APP.state.currentPlayer = APP.state.currentPlayer === 1 ? 2 : 1;
+				event.target.replaceChildren(icon);
 				// <i class="fa-solid fa-o yellow">O</i>
 				//  <i class="fa-solid fa-x turquoise">X</i>
 			});
