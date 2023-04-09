@@ -11,7 +11,47 @@ const APP = {
 
 	// here we track the current state of who is the player
 	state: {
-		currentPlayer: 2,
+		moves: [],
+	},
+
+	// function to get status of game
+	getGameStatus(moves) {
+		// declare player moves container
+		const p1Moves = moves
+			.filter((move) => move.playerId === 1)
+			.map((move) => +move.tileId);
+		const p2Moves = moves
+			.filter((move) => move.playerId === 2)
+			.map((move) => +move.tileId);
+
+		// declare all posible patterns to win
+		const winningPatterns = [
+			[1, 2, 3],
+			[1, 5, 9],
+			[1, 4, 7],
+			[2, 5, 8],
+			[3, 5, 7],
+			[3, 6, 9],
+			[4, 5, 6],
+			[7, 8, 9],
+		];
+
+		// declare winner as null in order declare tie
+		let winner = null;
+
+		// check if winning patter
+		winningPatterns.forEach((pattern) => {
+			const p1Wins = pattern.every((value) => p1Moves.includes(value));
+			const p2Wins = pattern.every((value) => p2Moves.includes(value));
+
+			// if player moves is true then set winner to player id
+			if (p1Wins) winner = 1;
+			if (p2Wins) winner = 2;
+		});
+		return {
+			status: moves.length === 9 || winner != null ? "complete" : "in-progress",
+			winner,
+		};
 	},
 
 	// function inicializer to add our event listeners
@@ -37,16 +77,35 @@ const APP = {
 
 		APP.$.tile.forEach((tile) => {
 			tile.addEventListener("click", (event) => {
-				console.log(`tile with id ${event.target.id} was clicked`);
+				// check if tile has existing move based on selected tile if not return undefined
+				const hasMove = (tileId) => {
+					const existingMove = APP.state.moves.find(
+						(move) => move.tileId === tileId
+					);
+					return existingMove !== undefined;
+				};
 
-				console.log(`Current Player is ${APP.state.currentPlayergi}`);
+				//check if tile has a move
+				if (hasMove(+tile.id)) {
+					return;
+				}
+
+				// declare constructer state to check last move
+				const lastMove = APP.state.moves.at(-1);
+
+				// declare constructer variable to get opposite number
+				const getOppositePlayer = (playerId) => (playerId === 1 ? 2 : 1);
+
+				//State is tracked of current player
+				const currentPlayer =
+					APP.state.moves.length === 0
+						? 1
+						: getOppositePlayer(lastMove.playerId);
 
 				// we declare icon and create the element
 				const icon = document.createElement("i");
 
-				//State is tracked
-				const currentPlayer = APP.state.currentPlayer;
-
+				// if current player 1 set to x and syles
 				if (currentPlayer === 1) {
 					icon.textContent = "X";
 					icon.classList.add("fa-solid", "fa-x", "turquoise");
@@ -55,10 +114,27 @@ const APP = {
 					icon.classList.add("fa-solid", "fa-x", "yellow");
 				}
 
-				APP.state.currentPlayer = APP.state.currentPlayer === 1 ? 2 : 1;
-				event.target.replaceChildren(icon);
-				// <i class="fa-solid fa-o yellow">O</i>
-				//  <i class="fa-solid fa-x turquoise">X</i>
+				// check and set state of moves
+				APP.state.moves.push({
+					tileId: +tile.id,
+					playerId: currentPlayer,
+				});
+
+				//we fill the tile with the icon based on current player
+				tile.replaceChildren(icon);
+
+				console.log("state", APP.state);
+
+				// here we check if game has been won
+				const game = APP.getGameStatus(APP.state.moves);
+
+				if (game.status === "complete") {
+					if (game.winner) {
+						alert(`Player ${game.winner} wins`);
+					} else {
+						alert("its a tie");
+					}
+				}
 			});
 		});
 	},
