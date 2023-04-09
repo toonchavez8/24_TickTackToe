@@ -7,6 +7,10 @@ const APP = {
 		resetBtn: document.querySelector('[data-id="reset-btn"]'),
 		newRoundBtn: document.querySelector('[data-id="new-round-btn"]'),
 		tile: document.querySelectorAll('[data-id="tile"]'),
+		modal: document.querySelector('[data-id="modal"]'),
+		modalText: document.querySelector('[data-id="modal-text"]'),
+		modalBtn: document.querySelector('[data-id="modal-btn"]'),
+		turn: document.querySelector('[data-id="turn"]'),
 	},
 
 	// here we track the current state of who is the player
@@ -75,6 +79,15 @@ const APP = {
 			console.log("start new round");
 		});
 
+		APP.$.modalBtn.addEventListener("click", (event) => {
+			// restart state
+			APP.state.moves = [];
+			// loop over every tile and replace with empy child
+			APP.$.tile.forEach((tile) => tile.replaceChildren());
+			//hide modal
+			APP.$.modal.classList.add("hidden");
+		});
+
 		APP.$.tile.forEach((tile) => {
 			tile.addEventListener("click", (event) => {
 				// check if tile has existing move based on selected tile if not return undefined
@@ -102,18 +115,30 @@ const APP = {
 						? 1
 						: getOppositePlayer(lastMove.playerId);
 
+				const nextPlayer = getOppositePlayer(currentPlayer);
+
+				const turnLabel = document.createElement("p");
+				turnLabel.innerText = `Player ${nextPlayer}, you're up!`;
 				// we declare icon and create the element
 				const icon = document.createElement("i");
+				const turnIcon = document.createElement("i");
 
 				// if current player 1 set to x and syles
 				if (currentPlayer === 1) {
 					icon.textContent = "X";
+					turnIcon.textContent = "O";
 					icon.classList.add("fa-solid", "fa-x", "turquoise");
+					turnIcon.classList.add("fa-solid", "fa-x", "yellow");
+					turnLabel.classList = "yellow";
 				} else {
 					icon.textContent = "O";
 					icon.classList.add("fa-solid", "fa-x", "yellow");
+					turnIcon.textContent = "X";
+					turnIcon.classList.add("fa-solid", "fa-x", "turquoise");
+					turnLabel.classList = "turquoise";
 				}
 
+				APP.$.turn.replaceChildren(turnIcon, turnLabel);
 				// check and set state of moves
 				APP.state.moves.push({
 					tileId: +tile.id,
@@ -129,11 +154,17 @@ const APP = {
 				const game = APP.getGameStatus(APP.state.moves);
 
 				if (game.status === "complete") {
+					// unhide modal
+					APP.$.modal.classList.remove("hidden");
+
+					let modalText = "";
 					if (game.winner) {
-						alert(`Player ${game.winner} wins`);
+						modalText = `Player ${game.winner} wins!`;
 					} else {
-						alert("its a tie");
+						modalText = "its a tie!";
 					}
+
+					APP.$.modalText.textContent = modalText;
 				}
 			});
 		});
