@@ -1,3 +1,5 @@
+import View from "./view.js";
+
 // global namespace constructor
 const APP = {
 	//not sure exactly why this is used but it allows us to get multiple variables
@@ -171,5 +173,19 @@ const APP = {
 	},
 };
 
-// this will wait for our page to load thanks to the window add eventlister on load will run our function with in our app adding event listerners to our actions menu
-window.addEventListener("load", APP.init);
+function init() {
+	const VIEW = new View();
+
+	VIEW.bindGameResetEvent((event) => {
+		console.log("reset Event", event);
+	});
+	VIEW.bindNewRoundEvent((event) => {
+		console.log("New Round Event", event);
+	});
+	VIEW.bindPlayerMoveEvent((event) => {
+		console.log("Player Move Event", event);
+	});
+}
+
+window.addEventListener("load", init);
+//  test commet to see if commit will be update
