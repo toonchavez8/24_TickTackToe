@@ -44,6 +44,22 @@ export default class View {
 
 		menuIcon.classList.toggle("rotate");
 	}
+
+	// set turn indicator
+	setTurnIndicator(player) {
+		const icon = document.createElement("i");
+		const label = document.createElement("p");
+
+		this.$.turn.classList.add(player === 1 ? "yellow" : "turquoise");
+		this.$.turn.classList.remove(player === 1 ? "turquoise" : "yellow");
+
+		icon.classList.add("fa-solid", player === 1 ? "fa-x" : "fa-o");
+
+		label.innerText = `Player ${player}, you're up!`;
+
+		this.$.turn.replaceChildren(icon, label);
+	}
+
 	// quiery Selectior function to check if element exists and to refactor
 	#qs(Selector, parent) {
 		const element = parent
