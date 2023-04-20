@@ -193,7 +193,8 @@ button:hover {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	font-size: 3rem;
+	font-size: calc(1.5rem + 1vw);
+	caret-color: transparent;
 }
 
 .square:hover {

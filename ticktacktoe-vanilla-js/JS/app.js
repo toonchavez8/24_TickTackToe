@@ -183,7 +183,8 @@ function init() {
 		console.log("New Round Event", event);
 	});
 	VIEW.bindPlayerMoveEvent((event) => {
-		VIEW.setTurnIndicator(2);
+		VIEW.setTurnIndicator(1);
+		VIEW.handlePlayerMove(event.target, 2);
 		console.log("Player Move Event", event);
 	});
 }

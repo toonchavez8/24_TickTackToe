@@ -34,48 +34,79 @@ export default class View {
 			tile.addEventListener("click", handler);
 		});
 	}
+	/**
+	 * Here we are going to create a helper methods to update the UI
+	 */
 
-	// dom helper methods
+	handlePlayerMove(tile, player) {
+		const icon = document.createElement("i");
+		icon.classList.add(
+			"fa-solid",
+			player === 1 ? "fa-x" : "fa-o",
+			player === 1 ? "yellow" : "turquoise"
+		);
+
+		tile.replaceChildren(icon);
+	}
 	#toggleMenu() {
+		// toggle adds and removes the keyword within the function
 		this.$.actionItems.classList.toggle("hidden");
 		this.$.actions.classList.toggle("border");
 
+		//get the icon element
 		const menuIcon = this.$.actions.querySelector("i");
 
+		//toggle the icon rotation class
 		menuIcon.classList.toggle("rotate");
 	}
 
-	// set turn indicator
+	/**
+	 * Sets the current turn indicator
+	 * @param {number} player
+	 */
+
 	setTurnIndicator(player) {
+		// Create elements
 		const icon = document.createElement("i");
 		const label = document.createElement("p");
 
+		// Add classes
 		this.$.turn.classList.add(player === 1 ? "yellow" : "turquoise");
 		this.$.turn.classList.remove(player === 1 ? "turquoise" : "yellow");
 
 		icon.classList.add("fa-solid", player === 1 ? "fa-x" : "fa-o");
 
+		// Set text
 		label.innerText = `Player ${player}, you're up!`;
 
+		// Replace children
 		this.$.turn.replaceChildren(icon, label);
 	}
 
-	// quiery Selectior function to check if element exists and to refactor
+	// Quiery selector helper methods
 	#qs(Selector, parent) {
+		// Get the element from the DOM
 		const element = parent
 			? parent.querySelector(Selector)
 			: document.querySelector(Selector);
 
+		// If there is no element, throw an error
 		if (!element) throw new Error(`Could not find the ${Selector} element`);
 
+		// Return the element
 		return element;
 	}
+
+	// Quiery selector all helper methods
 	#qsAll(Selector) {
+		// get the element from the DOM
 		const elementList = document.querySelectorAll(Selector);
 
+		// if there is no element, throw an error
 		if (!elementList)
 			throw new Error(`Could not find the ${Selector} as an element list`);
 
+		// return the element
 		return elementList;
 	}
 }
