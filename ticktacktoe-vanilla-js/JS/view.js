@@ -40,11 +40,7 @@ export default class View {
 
 	handlePlayerMove(tile, player) {
 		const icon = document.createElement("i");
-		icon.classList.add(
-			"fa-solid",
-			player === 1 ? "fa-x" : "fa-o",
-			player === 1 ? "yellow" : "turquoise"
-		);
+		icon.classList.add("fa-solid", player.iconClass, player.colorClass);
 
 		tile.replaceChildren(icon);
 	}
@@ -71,13 +67,11 @@ export default class View {
 		const label = document.createElement("p");
 
 		// Add classes
-		this.$.turn.classList.add(player === 1 ? "yellow" : "turquoise");
-		this.$.turn.classList.remove(player === 1 ? "turquoise" : "yellow");
-
-		icon.classList.add("fa-solid", player === 1 ? "fa-x" : "fa-o");
+		icon.classList.add("fa-solid", player.colorClass, player.iconClass);
+		label.classList.add(player.colorClass);
 
 		// Set text
-		label.innerText = `Player ${player}, you're up!`;
+		label.innerText = `${player.name}, you're up!`;
 
 		// Replace children
 		this.$.turn.replaceChildren(icon, label);

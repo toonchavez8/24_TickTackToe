@@ -1,4 +1,5 @@
 import View from "./view.js";
+import Store from "./store.js";
 
 // global namespace constructor
 const APP = {
@@ -173,8 +174,26 @@ const APP = {
 	},
 };
 
+const PLAYERS = [
+	{
+		id: 1,
+		name: "Player 1",
+		iconClass: "fa-x",
+		colorClass: "yellow",
+	},
+	{
+		id: 2,
+		name: "Player 2",
+		iconClass: "fa-o",
+		colorClass: "turquoise",
+	},
+];
+
 function init() {
 	const VIEW = new View();
+	const STORE = new Store(PLAYERS);
+
+	console.warn("store>", STORE.game);
 
 	VIEW.bindGameResetEvent((event) => {
 		console.log("reset Event", event);
@@ -183,9 +202,10 @@ function init() {
 		console.log("New Round Event", event);
 	});
 	VIEW.bindPlayerMoveEvent((event) => {
-		VIEW.setTurnIndicator(1);
-		VIEW.handlePlayerMove(event.target, 2);
-		console.log("Player Move Event", event);
+		const clickedTile = event.target;
+		VIEW.handlePlayerMove(clickedTile, STORE.game.currentPlayer);
+
+		VIEW.setTurnIndicator(PLAYERS[1]);
 	});
 }
 

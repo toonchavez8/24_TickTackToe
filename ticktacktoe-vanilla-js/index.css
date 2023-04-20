@@ -118,7 +118,7 @@ button:hover {
 }
 
 .turn p {
-	font-size: 14px;
+	font-size: calc(min(0.3rem + 0.5vw, 0.2rem + 1vh) + 0.5vw);
 	animation: 0.6s ease-in-out turn-text-animation;
 }
 
