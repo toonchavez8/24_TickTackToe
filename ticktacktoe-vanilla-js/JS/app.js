@@ -194,9 +194,14 @@ function init() {
 	const STORE = new Store(PLAYERS);
 
 	VIEW.bindGameResetEvent((event) => {
+		// Close the modal
 		VIEW.closeModal();
-
-		console.log("reset Event", event);
+		// Reset the store
+		STORE.resetGame();
+		// Set the indicator to the current player
+		VIEW.setTurnIndicator(STORE.game.currentPlayer);
+		// Clear the board
+		VIEW.clearBoard();
 	});
 	VIEW.bindNewRoundEvent((event) => {
 		console.log("New Round Event", event);

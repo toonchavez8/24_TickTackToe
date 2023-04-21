@@ -67,6 +67,13 @@ export default class Store {
 		this.#saveState(stateClone); // save the new game state
 	}
 
+	// function to reset the game state
+	resetGame() {
+		this.#saveState(inicialValue);
+
+		console.log(this.#getState());
+	}
+
 	// create a private getter to access the state
 	#getState() {
 		return this.#state;

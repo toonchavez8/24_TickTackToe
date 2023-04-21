@@ -38,6 +38,12 @@ export default class View {
 	/**
 	 * Here we are going to create a helper methods to update the UI
 	 */
+	// clear the game board
+	clearBoard() {
+		this.$$.tile.forEach((tile) => {
+			tile.innerHTML = "";
+		});
+	}
 
 	openModal(message) {
 		this.$.modal.classList.remove("hidden");
