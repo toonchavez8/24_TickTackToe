@@ -25,18 +25,28 @@ export default class View {
 
 	bindGameResetEvent(handler) {
 		this.$.resetBtn.addEventListener("click", handler);
+		this.$.modalBtn.addEventListener("click", handler);
 	}
 	bindNewRoundEvent(handler) {
 		this.$.newRoundBtn.addEventListener("click", handler);
 	}
 	bindPlayerMoveEvent(handler) {
 		this.$$.tile.forEach((tile) => {
-			tile.addEventListener("click", handler);
+			tile.addEventListener("click", () => handler(tile));
 		});
 	}
 	/**
 	 * Here we are going to create a helper methods to update the UI
 	 */
+
+	openModal(message) {
+		this.$.modal.classList.remove("hidden");
+		this.$.modalText.innerText = message;
+	}
+
+	closeModal() {
+		this.$.modal.classList.add("hidden");
+	}
 
 	handlePlayerMove(tile, player) {
 		const icon = document.createElement("i");

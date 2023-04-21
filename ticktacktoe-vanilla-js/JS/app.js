@@ -193,19 +193,45 @@ function init() {
 	const VIEW = new View();
 	const STORE = new Store(PLAYERS);
 
-	console.warn("store>", STORE.game);
-
 	VIEW.bindGameResetEvent((event) => {
+		VIEW.closeModal();
+
 		console.log("reset Event", event);
 	});
 	VIEW.bindNewRoundEvent((event) => {
 		console.log("New Round Event", event);
 	});
-	VIEW.bindPlayerMoveEvent((event) => {
-		const clickedTile = event.target;
-		VIEW.handlePlayerMove(clickedTile, STORE.game.currentPlayer);
+	VIEW.bindPlayerMoveEvent((tile) => {
+		// get clicked tile
 
-		VIEW.setTurnIndicator(PLAYERS[1]);
+		const existingMove = STORE.game.moves.find(
+			(move) => move.tileId === +tile.id
+		);
+
+		// check if tile has existing move based on selected tile if not return undefined
+
+		if (existingMove) {
+			return;
+		}
+		// place icon of current plage in a selected tile
+		VIEW.handlePlayerMove(tile, STORE.game.currentPlayer);
+
+		// add move to game state
+		STORE.playerMove(+tile.id);
+
+		// check if game is complete
+		if (STORE.game.status.isComplete) {
+			// show modal
+			VIEW.openModal(
+				STORE.game.status.winner
+					? `${STORE.game.status.winner.name} wins!`
+					: "It's a tie!"
+			);
+
+			return;
+		}
+		// set turn indicator to next player id
+		VIEW.setTurnIndicator(STORE.game.currentPlayer);
 	});
 }
 
