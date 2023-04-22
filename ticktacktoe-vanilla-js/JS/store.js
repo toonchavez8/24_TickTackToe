@@ -1,5 +1,9 @@
 const inicialValue = {
-	moves: [],
+	currentGameMoves: [],
+	history: {
+		currentRoundgames: [],
+		allGames: [],
+	},
 };
 
 export default class Store {
@@ -9,10 +13,30 @@ export default class Store {
 		this.players = players;
 	}
 
+	get stats() {
+		const state = this.#getState();
+		return {
+			playerWithStats: this.players.map((player) => {
+				const wins = state.history.currentRoundgames.filter(
+					(game) => game.status.winner?.id === player.id
+				).length;
+				return {
+					...player,
+					wins,
+				};
+			}),
+			ties: state.history.currentRoundgames.filter(
+				(game) => game.status.winner === null
+			).length,
+		};
+	}
+
+	// create a getter to access the game state
+
 	get game() {
 		const state = this.#getState();
 
-		const currentPlayer = this.players[state.moves.length % 2];
+		const currentPlayer = this.players[state.currentGameMoves.length % 2];
 
 		// declare all posible patterns to win
 		const winningPatterns = [
@@ -30,7 +54,7 @@ export default class Store {
 		let winner = null;
 
 		for (const player of this.players) {
-			const selectedTiles = state.moves
+			const selectedTiles = state.currentGameMoves
 				.filter((move) => move.player.id === player.id)
 				.map((move) => move.tileId);
 
@@ -43,10 +67,10 @@ export default class Store {
 		}
 
 		return {
-			moves: state.moves,
+			moves: state.currentGameMoves,
 			currentPlayer,
 			status: {
-				isComplete: state.moves.length === 9 || winner != null,
+				isComplete: state.currentGameMoves.length === 9 || winner != null,
 				winner,
 			},
 		};
@@ -54,11 +78,9 @@ export default class Store {
 
 	playerMove(tileId) {
 		// function to update the game state
-		const state = this.#getState(); // get the current game state
+		const stateClone = structuredClone(this.#getState()); // get the current game state
 
-		const stateClone = structuredClone(state); // clone the current game state
-
-		stateClone.moves.push({
+		stateClone.currentGameMoves.push({
 			// add the move to the clone
 			tileId,
 			player: this.game.currentPlayer,
@@ -69,9 +91,20 @@ export default class Store {
 
 	// function to reset the game state
 	resetGame() {
-		this.#saveState(inicialValue);
+		const stateClone = structuredClone(this.#getState()); // get the current game state
 
-		console.log("game Reset", this.#getState());
+		const { status, moves } = this.game;
+		// if game complete we save the game in history
+		if (status.isComplete) {
+			stateClone.history.currentRoundgames.push({
+				moves,
+				status,
+			});
+		}
+		stateClone.currentGameMoves = []; // reset the moves
+
+		console.log(stateClone);
+		this.#saveState(stateClone);
 	}
 
 	// create a private getter to access the state

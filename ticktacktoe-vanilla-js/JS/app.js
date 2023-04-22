@@ -202,6 +202,14 @@ function init() {
 		VIEW.setTurnIndicator(STORE.game.currentPlayer);
 		// Clear the board
 		VIEW.clearBoard();
+
+		VIEW.updateScoreBoard(
+			STORE.stats.playerWithStats[0].wins,
+			STORE.stats.playerWithStats[1].wins,
+			STORE.stats.ties
+		);
+
+		console.log(STORE.stats);
 	});
 	VIEW.bindNewRoundEvent((event) => {
 		console.log("New Round Event", event);

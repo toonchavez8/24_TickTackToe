@@ -11,8 +11,12 @@ export default class View {
 		this.$.modalText = this.#qs('[data-id="modal-text"]');
 		this.$.modalBtn = this.#qs('[data-id="modal-btn"]');
 		this.$.turn = this.#qs('[data-id="turn"]');
+		this.$.p1wins = this.#qs('[data-id="p1-wins"]');
+		this.$.p2wins = this.#qs('[data-id="p2-wins"]');
+		this.$.ties = this.#qs('[data-id="ties"]');
 
 		this.$$.tile = this.#qsAll('[data-id="tile"]');
+
 		// view only ui elements
 		// DONE - this will control our menu
 		this.$.actions.addEventListener("click", (event) => {
@@ -38,6 +42,13 @@ export default class View {
 	/**
 	 * Here we are going to create a helper methods to update the UI
 	 */
+	// update scorebored
+	updateScoreBoard(p1Wins, p2Wins, ties) {
+		this.$.p1wins.innerText = `${p1Wins} wins`;
+		this.$.p2wins.innerText = `${p2Wins} wins`;
+		this.$.ties.innerText = `${ties} ties`;
+	}
+
 	// clear the game board
 	clearBoard() {
 		this.$$.tile.forEach((tile) => {
@@ -56,7 +67,6 @@ export default class View {
 
 	closeAll() {
 		this.#closeModal();
-		3;
 		this.#closeMenu();
 	}
 
