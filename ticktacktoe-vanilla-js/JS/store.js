@@ -103,7 +103,21 @@ export default class Store {
 		}
 		stateClone.currentGameMoves = []; // reset the moves
 
-		console.log(stateClone);
+		this.#saveState(stateClone);
+	}
+
+	// function to reset the game stats
+	newRound() {
+		this.resetGame();
+		// get the current game state as a clone
+		const stateClone = structuredClone(this.#getState());
+
+		// save the current round games in all games
+		stateClone.history.allGames.push(...stateClone.history.currentRoundgames);
+
+		// reset the current round games
+		stateClone.history.currentRoundgames = [];
+
 		this.#saveState(stateClone);
 	}
 

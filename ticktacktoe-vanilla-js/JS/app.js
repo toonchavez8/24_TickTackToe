@@ -208,11 +208,22 @@ function init() {
 			STORE.stats.playerWithStats[1].wins,
 			STORE.stats.ties
 		);
-
-		console.log(STORE.stats);
 	});
 	VIEW.bindNewRoundEvent((event) => {
-		console.log("New Round Event", event);
+		STORE.newRound();
+
+		// Close the modal
+		VIEW.closeAll();
+		// Clear the board
+		VIEW.clearBoard();
+		// Set the indicator to the current player
+		VIEW.setTurnIndicator(STORE.game.currentPlayer);
+		VIEW.updateScoreBoard(
+			STORE.stats.playerWithStats[0].wins,
+			STORE.stats.playerWithStats[1].wins,
+			STORE.stats.ties
+		);
+		// Reset the with a new round
 	});
 	VIEW.bindPlayerMoveEvent((tile) => {
 		// get clicked tile
