@@ -50,8 +50,14 @@ export default class View {
 		this.$.modalText.innerText = message;
 	}
 
-	closeModal() {
+	#closeModal() {
 		this.$.modal.classList.add("hidden");
+	}
+
+	closeAll() {
+		this.#closeModal();
+		3;
+		this.#closeMenu();
 	}
 
 	handlePlayerMove(tile, player) {
@@ -60,6 +66,18 @@ export default class View {
 
 		tile.replaceChildren(icon);
 	}
+
+	#closeMenu() {
+		this.$.actionItems.classList.add("hidden");
+		this.$.actions.classList.remove("border");
+
+		//get the icon element
+		const menuIcon = this.$.actions.querySelector("i");
+
+		//toggle the icon rotation class
+		menuIcon.classList.toggle("rotate");
+	}
+
 	#toggleMenu() {
 		// toggle adds and removes the keyword within the function
 		this.$.actionItems.classList.toggle("hidden");

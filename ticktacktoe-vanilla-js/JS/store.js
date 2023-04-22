@@ -71,7 +71,7 @@ export default class Store {
 	resetGame() {
 		this.#saveState(inicialValue);
 
-		console.log(this.#getState());
+		console.log("game Reset", this.#getState());
 	}
 
 	// create a private getter to access the state

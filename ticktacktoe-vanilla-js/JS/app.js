@@ -195,7 +195,7 @@ function init() {
 
 	VIEW.bindGameResetEvent((event) => {
 		// Close the modal
-		VIEW.closeModal();
+		VIEW.closeAll();
 		// Reset the store
 		STORE.resetGame();
 		// Set the indicator to the current player
