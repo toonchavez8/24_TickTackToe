@@ -77,6 +77,17 @@ export default class View {
 		tile.replaceChildren(icon);
 	}
 
+	initializeMoves(moves) {
+		// Loop through each tile on the board
+		this.$$.tile.forEach((tile) => {
+			const existingMove = moves.find((move) => move.tileId === +tile.id);
+
+			if (existingMove) {
+				this.handlePlayerMove(tile, existingMove.player);
+			}
+		});
+	}
+
 	#closeMenu() {
 		this.$.actionItems.classList.add("hidden");
 		this.$.actions.classList.remove("border");

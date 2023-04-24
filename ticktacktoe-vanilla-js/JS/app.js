@@ -33,9 +33,16 @@ function init() {
 			STORE.stats.playerWithStats[1].wins,
 			STORE.stats.ties
 		);
+		VIEW.initializeMoves(STORE.game.moves);
 	}
 
+	window.addEventListener("storage", () => {
+		console.log("storage event from another tab");
+		initView();
+	});
+
 	initView();
+
 	VIEW.bindGameResetEvent((event) => {
 		// Reset the store
 		STORE.resetGame();
