@@ -7,9 +7,8 @@ const inicialValue = {
 };
 
 export default class Store {
-	// create a private field
-	#state = inicialValue;
-	constructor(players) {
+	constructor(key, players) {
+		this.storageKey = key;
 		this.players = players;
 	}
 
@@ -123,7 +122,8 @@ export default class Store {
 
 	// create a private getter to access the state
 	#getState() {
-		return this.#state;
+		const item = window.localStorage.getItem(this.storageKey);
+		return item ? JSON.parse(item) : inicialValue;
 	}
 
 	// create a private method to save the state
@@ -148,6 +148,6 @@ export default class Store {
 		}
 
 		// Save new state
-		this.#state = newState;
+		window.localStorage.setItem(this.storageKey, JSON.stringify(newState));
 	}
 }

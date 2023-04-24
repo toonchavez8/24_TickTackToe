@@ -18,39 +18,39 @@ const PLAYERS = [
 
 function init() {
 	const VIEW = new View();
-	const STORE = new Store(PLAYERS);
+	const STORE = new Store("live-t3-storage-key", PLAYERS);
 
-	VIEW.bindGameResetEvent((event) => {
-		// Close the modal
+	function initView() {
+		// Close all open modals
 		VIEW.closeAll();
-		// Reset the store
-		STORE.resetGame();
-		// Set the indicator to the current player
-		VIEW.setTurnIndicator(STORE.game.currentPlayer);
-		// Clear the board
+		// Clear the game board
 		VIEW.clearBoard();
-
+		// Set the turn indicator to the current player
+		VIEW.setTurnIndicator(STORE.game.currentPlayer);
+		// Update the scoreboard with the current stats
 		VIEW.updateScoreBoard(
 			STORE.stats.playerWithStats[0].wins,
 			STORE.stats.playerWithStats[1].wins,
 			STORE.stats.ties
 		);
+		VIEW.initializeMoves(STORE.game.moves);
+	}
+
+	window.addEventListener("storage", () => {
+		console.log("storage event from another tab");
+		initView();
+	});
+
+	initView();
+
+	VIEW.bindGameResetEvent((event) => {
+		// Reset the store
+		STORE.resetGame();
+		initView();
 	});
 	VIEW.bindNewRoundEvent((event) => {
 		STORE.newRound();
-
-		// Close the modal
-		VIEW.closeAll();
-		// Clear the board
-		VIEW.clearBoard();
-		// Set the indicator to the current player
-		VIEW.setTurnIndicator(STORE.game.currentPlayer);
-		VIEW.updateScoreBoard(
-			STORE.stats.playerWithStats[0].wins,
-			STORE.stats.playerWithStats[1].wins,
-			STORE.stats.ties
-		);
-		// Reset the with a new round
+		initView();
 	});
 	VIEW.bindPlayerMoveEvent((tile) => {
 		// get clicked tile
