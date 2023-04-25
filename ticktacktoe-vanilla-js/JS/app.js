@@ -17,44 +17,36 @@ const PLAYERS = [
 ];
 
 function init() {
-	const VIEW = new View();
+	// model
 	const STORE = new Store("live-t3-storage-key", PLAYERS);
 
-	function initView() {
-		// Close all open modals
-		VIEW.closeAll();
-		// Clear the game board
-		VIEW.clearBoard();
-		// Set the turn indicator to the current player
-		VIEW.setTurnIndicator(STORE.game.currentPlayer);
-		// Update the scoreboard with the current stats
-		VIEW.updateScoreBoard(
-			STORE.stats.playerWithStats[0].wins,
-			STORE.stats.playerWithStats[1].wins,
-			STORE.stats.ties
-		);
-		VIEW.initializeMoves(STORE.game.moves);
-	}
+	// view
+	const VIEW = new View();
 
-	window.addEventListener("storage", () => {
-		console.log("storage event from another tab");
-		initView();
+	// this is the event for current tab
+	STORE.addEventListener("stateChange", () => {
+		VIEW.render(STORE.game, STORE.stats);
 	});
 
-	initView();
+	// this is the event for other tabs
+	window.addEventListener("storage", () => {
+		console.log("storage event from another tab");
+		VIEW.render(STORE.game, STORE.stats);
+	});
+
+	// initialize the game and render the UI
+	VIEW.render(STORE.game, STORE.stats);
 
 	VIEW.bindGameResetEvent((event) => {
 		// Reset the store
 		STORE.resetGame();
-		initView();
 	});
+
 	VIEW.bindNewRoundEvent((event) => {
 		STORE.newRound();
-		initView();
 	});
-	VIEW.bindPlayerMoveEvent((tile) => {
-		// get clicked tile
 
+	VIEW.bindPlayerMoveEvent((tile) => {
 		const existingMove = STORE.game.moves.find(
 			(move) => move.tileId === +tile.id
 		);
@@ -64,25 +56,8 @@ function init() {
 		if (existingMove) {
 			return;
 		}
-		// place icon of current plage in a selected tile
-		VIEW.handlePlayerMove(tile, STORE.game.currentPlayer);
 
-		// add move to game state
 		STORE.playerMove(+tile.id);
-
-		// check if game is complete
-		if (STORE.game.status.isComplete) {
-			// show modal
-			VIEW.openModal(
-				STORE.game.status.winner
-					? `${STORE.game.status.winner.name} wins!`
-					: "It's a tie!"
-			);
-
-			return;
-		}
-		// set turn indicator to next player id
-		VIEW.setTurnIndicator(STORE.game.currentPlayer);
 	});
 }
 
