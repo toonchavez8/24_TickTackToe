@@ -14,6 +14,7 @@ export default class View {
 		this.$.p1wins = this.#qs('[data-id="p1-wins"]');
 		this.$.p2wins = this.#qs('[data-id="p2-wins"]');
 		this.$.ties = this.#qs('[data-id="ties"]');
+		this.$.grid = this.#qs('[data-id="grid"]');
 
 		this.$$.tile = this.#qsAll('[data-id="tile"]');
 
@@ -23,6 +24,47 @@ export default class View {
 			// toggle adds and removes the keyword within the function
 			this.#toggleMenu();
 		});
+	}
+
+	render(game, stats) {
+		// destructure game object
+		const {
+			currentPlayer,
+			moves,
+			status: { isComplete, winner },
+		} = game;
+
+		// destructure stats object
+		const { playerWithStats, ties } = stats;
+
+		// close all modals
+		this.#closeAll();
+
+		// update the UI
+		this.#clearBoard();
+
+		// set turn indicator to current player
+		this.#setTurnIndicator(currentPlayer);
+
+		// update scorebored
+		this.#updateScoreBoard(
+			playerWithStats[0].wins,
+			playerWithStats[1].wins,
+			ties
+		);
+
+		// initialize moves
+		this.#initializeMoves(moves);
+
+		// check if game is complete
+		if (isComplete) {
+			// show modal if game is complete
+			this.#openModal(winner ? `${winner.name} wins!` : "It's a tie!");
+			return;
+		}
+
+		// set turn indicator to next player id
+		this.#setTurnIndicator(currentPlayer);
 	}
 
 	// register all event listners
@@ -35,28 +77,26 @@ export default class View {
 		this.$.newRoundBtn.addEventListener("click", handler);
 	}
 	bindPlayerMoveEvent(handler) {
-		this.$$.tile.forEach((tile) => {
-			tile.addEventListener("click", () => handler(tile));
-		});
+		this.#delegate(this.$.grid, '[data-id="tile"]', "click", handler);
 	}
 	/**
 	 * Here we are going to create a helper methods to update the UI
 	 */
 	// update scorebored
-	updateScoreBoard(p1Wins, p2Wins, ties) {
+	#updateScoreBoard(p1Wins, p2Wins, ties) {
 		this.$.p1wins.innerText = `${p1Wins} wins`;
 		this.$.p2wins.innerText = `${p2Wins} wins`;
 		this.$.ties.innerText = `${ties} ties`;
 	}
 
 	// clear the game board
-	clearBoard() {
+	#clearBoard() {
 		this.$$.tile.forEach((tile) => {
 			tile.innerHTML = "";
 		});
 	}
 
-	openModal(message) {
+	#openModal(message) {
 		this.$.modal.classList.remove("hidden");
 		this.$.modalText.innerText = message;
 	}
@@ -65,25 +105,25 @@ export default class View {
 		this.$.modal.classList.add("hidden");
 	}
 
-	closeAll() {
+	#closeAll() {
 		this.#closeModal();
 		this.#closeMenu();
 	}
 
-	handlePlayerMove(tile, player) {
+	#handlePlayerMove(tile, player) {
 		const icon = document.createElement("i");
 		icon.classList.add("fa-solid", player.iconClass, player.colorClass);
 
 		tile.replaceChildren(icon);
 	}
 
-	initializeMoves(moves) {
+	#initializeMoves(moves) {
 		// Loop through each tile on the board
 		this.$$.tile.forEach((tile) => {
 			const existingMove = moves.find((move) => move.tileId === +tile.id);
 
 			if (existingMove) {
-				this.handlePlayerMove(tile, existingMove.player);
+				this.#handlePlayerMove(tile, existingMove.player);
 			}
 		});
 	}
@@ -116,7 +156,7 @@ export default class View {
 	 * @param {number} player
 	 */
 
-	setTurnIndicator(player) {
+	#setTurnIndicator(player) {
 		// Create elements
 		const icon = document.createElement("i");
 		const label = document.createElement("p");
@@ -157,5 +197,15 @@ export default class View {
 
 		// return the element
 		return elementList;
+	}
+
+	// delegate helper method
+	#delegate(el, selector, eventKey, handler) {
+		// add event listener to parent
+		el.addEventListener(eventKey, (event) => {
+			if (event.target.matches(selector)) {
+				handler(event.target);
+			}
+		});
 	}
 }
