@@ -15,6 +15,7 @@ export default class View {
 		this.$.p2wins = this.#qs('[data-id="p2-wins"]');
 		this.$.ties = this.#qs('[data-id="ties"]');
 		this.$.grid = this.#qs('[data-id="grid"]');
+		this.$.header = this.#qs('[data-id="header"]');
 
 		this.$$.tile = this.#qsAll('[data-id="tile"]');
 
@@ -29,6 +30,10 @@ export default class View {
 	// test
 
 	render(game, stats) {
+
+		//set header
+		this.#setHeader();
+
 		// destructure game object
 		const {
 			currentPlayer,
@@ -117,6 +122,10 @@ export default class View {
 		icon.classList.add("fa-solid", player.iconClass, player.colorClass);
 
 		tile.replaceChildren(icon);
+	}
+
+	#setHeader(){
+		this.$.header.innerText = "TypeScript";	
 	}
 
 	#initializeMoves(moves) {
