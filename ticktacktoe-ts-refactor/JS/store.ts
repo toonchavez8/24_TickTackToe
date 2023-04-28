@@ -1,4 +1,6 @@
-const inicialValue = {
+import type { Player, Move, GameStatus, Game, GameState } from "./types";
+
+const inicialValue: GameState = {
 	currentGameMoves: [],
 	history: {
 		currentRoundgames: [],
@@ -6,11 +8,21 @@ const inicialValue = {
 	},
 };
 
+
+
+
+// function to clone the game state
+
 export default class Store extends EventTarget {
-	constructor(key, players) {
+
+
+	constructor(
+		private readonly storageKey: string,
+		private readonly players: Player[]
+		) {
+		// since we are extending eventTarget we need to call super to initialize the eventTarget
 		super();
-		this.storageKey = key;
-		this.players = players;
+	
 	}
 
 	get stats() {
@@ -76,7 +88,7 @@ export default class Store extends EventTarget {
 		};
 	}
 
-	playerMove(tileId) {
+	playerMove(tileId: number) {
 		// function to update the game state
 		const stateClone = structuredClone(this.#getState()); // get the current game state
 
@@ -93,6 +105,7 @@ export default class Store extends EventTarget {
 	resetGame() {
 		const stateClone = structuredClone(this.#getState()); // get the current game state
 
+	
 		const { status, moves } = this.game;
 		// if game complete we save the game in history
 		if (status.isComplete) {
@@ -110,7 +123,7 @@ export default class Store extends EventTarget {
 	newRound() {
 		this.resetGame();
 		// get the current game state as a clone
-		const stateClone = structuredClone(this.#getState());
+		const stateClone = structuredClone(this.#getState()) as GameState;
 
 		// save the current round games in all games
 		stateClone.history.allGames.push(...stateClone.history.currentRoundgames);
@@ -124,11 +137,11 @@ export default class Store extends EventTarget {
 	// create a private getter to access the state
 	#getState() {
 		const item = window.localStorage.getItem(this.storageKey);
-		return item ? JSON.parse(item) : inicialValue;
+		return item ? JSON.parse(item) as GameState : inicialValue;
 	}
 
 	// create a private method to save the state
-	#saveState(stateOrFunction) {
+	#saveState(stateOrFunction: GameState | ((prevState: GameState) => GameState)) {
 		// Save previous state
 		const prevState = this.#getState();
 

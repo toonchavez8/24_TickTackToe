@@ -26,6 +26,8 @@ export default class View {
 		});
 	}
 
+	// test
+
 	render(game, stats) {
 		// destructure game object
 		const {
