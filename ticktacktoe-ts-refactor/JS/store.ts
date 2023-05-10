@@ -1,4 +1,16 @@
-import type { Player, Move, GameStatus, Game, GameState } from "./types";
+import type { Player, GameState, Move,  GameStatus } from "./types";
+
+export type DerivedStats = {
+	playerWithStats: (Player & { wins: number })[];
+	ties: number;
+};
+
+export type DerivedGame = {
+	currentPlayer: Player;
+	moves: Move[];
+	status: GameStatus;
+}
+
 
 const inicialValue: GameState = {
 	currentGameMoves: [],
@@ -25,7 +37,7 @@ export default class Store extends EventTarget {
 	
 	}
 
-	get stats() {
+	get stats(): DerivedStats {
 		const state = this.#getState();
 		return {
 			playerWithStats: this.players.map((player) => {
@@ -45,7 +57,7 @@ export default class Store extends EventTarget {
 
 	// create a getter to access the game state
 
-	get game() {
+	get game(): DerivedGame {
 		const state = this.#getState();
 
 		const currentPlayer = this.players[state.currentGameMoves.length % 2];
@@ -123,7 +135,7 @@ export default class Store extends EventTarget {
 	newRound() {
 		this.resetGame();
 		// get the current game state as a clone
-		const stateClone = structuredClone(this.#getState()) as GameState;
+		const stateClone = structuredClone(this.#getState());
 
 		// save the current round games in all games
 		stateClone.history.allGames.push(...stateClone.history.currentRoundgames);

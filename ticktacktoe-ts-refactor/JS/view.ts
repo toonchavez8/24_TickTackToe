@@ -1,6 +1,10 @@
+import type { Move, Player } from "./types";
+
+import type { DerivedGame, DerivedStats } from "./store";
+
 export default class View {
-	$ = {};
-	$$ = {};
+	$: Record<string,Element> = {};
+	$$: Record<string, NodeListOf<Element>> = {};
 
 	constructor() {
 		this.$.actions = this.#qs('[data-id="menu-btn"]');
@@ -29,7 +33,7 @@ export default class View {
 
 	// test
 
-	render(game, stats) {
+	render(game: DerivedGame, stats: DerivedStats ) {
 
 		//set header
 		this.#setHeader();
@@ -76,24 +80,24 @@ export default class View {
 
 	// register all event listners
 
-	bindGameResetEvent(handler) {
+	bindGameResetEvent(handler: EventListener) {
 		this.$.resetBtn.addEventListener("click", handler);
 		this.$.modalBtn.addEventListener("click", handler);
 	}
-	bindNewRoundEvent(handler) {
+	bindNewRoundEvent(handler: EventListener) {
 		this.$.newRoundBtn.addEventListener("click", handler);
 	}
-	bindPlayerMoveEvent(handler) {
+	bindPlayerMoveEvent(handler: (el: Element) => void) {
 		this.#delegate(this.$.grid, '[data-id="tile"]', "click", handler);
 	}
 	/**
 	 * Here we are going to create a helper methods to update the UI
 	 */
 	// update scorebored
-	#updateScoreBoard(p1Wins, p2Wins, ties) {
-		this.$.p1wins.innerText = `${p1Wins} wins`;
-		this.$.p2wins.innerText = `${p2Wins} wins`;
-		this.$.ties.innerText = `${ties} ties`;
+	#updateScoreBoard(p1Wins:number, p2Wins:number, ties:number) {
+		this.$.p1wins.textContent = `${p1Wins} wins`;
+		this.$.p2wins.textContent = `${p2Wins} wins`;
+		this.$.ties.textContent = `${ties} ties`;
 	}
 
 	// clear the game board
@@ -103,9 +107,9 @@ export default class View {
 		});
 	}
 
-	#openModal(message) {
+	#openModal(message: string) {
 		this.$.modal.classList.remove("hidden");
-		this.$.modalText.innerText = message;
+		this.$.modalText.textContent = message;
 	}
 
 	#closeModal() {
@@ -117,7 +121,7 @@ export default class View {
 		this.#closeMenu();
 	}
 
-	#handlePlayerMove(tile, player) {
+	#handlePlayerMove(tile: Element, player: Player) {
 		const icon = document.createElement("i");
 		icon.classList.add("fa-solid", player.iconClass, player.colorClass);
 
@@ -125,10 +129,10 @@ export default class View {
 	}
 
 	#setHeader(){
-		this.$.header.innerText = "TypeScript";	
+		this.$.header.textContent = "TypeScript";	
 	}
 
-	#initializeMoves(moves) {
+	#initializeMoves(moves: Move[]) {
 		// Loop through each tile on the board
 		this.$$.tile.forEach((tile) => {
 			const existingMove = moves.find((move) => move.tileId === +tile.id);
@@ -144,7 +148,7 @@ export default class View {
 		this.$.actions.classList.remove("border");
 
 		//get the icon element
-		const menuIcon = this.$.actions.querySelector("i");
+		const menuIcon = this.#qs("i", this.$.actions)
 
 		//toggle the icon rotation class
 		menuIcon.classList.toggle("rotate");
@@ -156,7 +160,7 @@ export default class View {
 		this.$.actions.classList.toggle("border");
 
 		//get the icon element
-		const menuIcon = this.$.actions.querySelector("i");
+		const menuIcon = this.#qs("i", this.$.actions)
 
 		//toggle the icon rotation class
 		menuIcon.classList.toggle("rotate");
@@ -167,7 +171,7 @@ export default class View {
 	 * @param {number} player
 	 */
 
-	#setTurnIndicator(player) {
+	#setTurnIndicator(player: Player) {
 		// Create elements
 		const icon = document.createElement("i");
 		const label = document.createElement("p");
@@ -177,14 +181,14 @@ export default class View {
 		label.classList.add(player.colorClass);
 
 		// Set text
-		label.innerText = `${player.name}, you're up!`;
+		label.textContent = `${player.name}, you're up!`;
 
 		// Replace children
 		this.$.turn.replaceChildren(icon, label);
 	}
 
 	// Quiery selector helper methods
-	#qs(Selector, parent) {
+	#qs(Selector:string, parent?: Element) {
 		// Get the element from the DOM
 		const element = parent
 			? parent.querySelector(Selector)
@@ -198,7 +202,7 @@ export default class View {
 	}
 
 	// Quiery selector all helper methods
-	#qsAll(Selector) {
+	#qsAll(Selector:string) {
 		// get the element from the DOM
 		const elementList = document.querySelectorAll(Selector);
 
@@ -211,10 +215,21 @@ export default class View {
 	}
 
 	// delegate helper method
-	#delegate(el, selector, eventKey, handler) {
+	#delegate(
+		el:Element, 
+		selector:string, 
+		eventKey:string, 
+		handler: (el: Element) => void
+		){
 		// add event listener to parent
 		el.addEventListener(eventKey, (event) => {
-			if (event.target.matches(selector)) {
+
+			if (!(event.target instanceof Element)){
+				throw new Error("Event target is not an element");
+			}
+
+
+			if (event.target?.matches(selector)) {
 				handler(event.target);
 			}
 		});
