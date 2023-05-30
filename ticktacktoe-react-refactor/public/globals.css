@@ -261,24 +261,6 @@ button:hover {
 	margin-top: 2px;
 }
 
-/* Footer styles */
-
-footer {
-	color: white;
-	margin-top: 50px;
-	display: flex;
-	gap: 1rem;
-}
-
-footer p {
-	margin-top: 10px;
-	text-align: center;
-}
-
-footer a {
-	color: var(--yellow);
-}
-
 /* Modal styles - opens when game finishes  */
 
 .modal {
