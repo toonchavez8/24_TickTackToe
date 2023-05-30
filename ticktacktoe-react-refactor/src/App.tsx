@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import Footer from "./components/footer/Footer";
 import Modal from "./components/modal/Modal";
+import Menu from "./components/menu/Menu";
 
 export default function App() {
 	const [showModal, setShowModal] = useState(false);
@@ -25,29 +26,15 @@ export default function App() {
 						<p className="yellow">Player 1, you're up!</p>
 					</div>
 
-					{/* <!-- Dropdown menu --> */}
+					<Menu onAction={(action) => console.log(action)} />
 
-					<nav className="actions" data-id="menu">
-						<button className="menu-btn" data-id="menu-btn">
-							Actions
-							<i className="fa-solid fa-chevron-down yellow "></i>
-						</button>
-
-						<div className="items border hidden" data-id="menu-items">
-							<button data-id="reset-btn">Reset</button>
-							<button data-id="new-round-btn">New Round</button>
-						</div>
-					</nav>
-					{/* <!-- game board --> */}
-					<div id="1" className="square shadow" data-id="tile"></div>
-					<div id="2" className="square shadow" data-id="tile"></div>
-					<div id="3" className="square shadow" data-id="tile"></div>
-					<div id="4" className="square shadow" data-id="tile"></div>
-					<div id="5" className="square shadow" data-id="tile"></div>
-					<div id="6" className="square shadow" data-id="tile"></div>
-					<div id="7" className="square shadow" data-id="tile"></div>
-					<div id="8" className="square shadow" data-id="tile"></div>
-					<div id="9" className="square shadow" data-id="tile"></div>
+					{[1, 2, 3, 4, 5, 6, 7, 8, 9].map((squareId) => {
+						return (
+							<div key={squareId} className="square shadow">
+								<i className="fa-solid fa-x turquoise"></i>
+							</div>
+						);
+					})}
 
 					{/* <!-- Scoreboard --> */}
 					<div
