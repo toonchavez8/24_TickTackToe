@@ -1,7 +1,11 @@
+import { useState } from "react";
 import "./App.css";
-import Footer from "./components/Footer";
+import Footer from "./components/footer/Footer";
+import Modal from "./components/modal/Modal";
 
 export default function App() {
+	const [showModal, setShowModal] = useState(false);
+
 	return (
 		<>
 			<a
@@ -72,13 +76,7 @@ export default function App() {
 
 			<Footer />
 
-			{/* <!-- Modal that opens when game ends --> */}
-			<div className="modal hidden " data-id="modal">
-				<div className="modal-contents">
-					<p data-id="modal-text">Player 1 wins!</p>
-					<button data-id="modal-btn">Play again</button>
-				</div>
-			</div>
+			{showModal && <Modal message="Player 1 Wins!" />}
 		</>
 	);
 }
