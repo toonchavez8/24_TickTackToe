@@ -33,7 +33,7 @@ body {
 	background-color: var(--dark-gray);
 }
 
-body {
+#react-root {
 	padding: 5.625rem 1.25rem;
 	display: flex;
 	flex-direction: column;
