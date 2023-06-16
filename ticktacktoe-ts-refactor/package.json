@@ -1,0 +1,18 @@
+{
+  "name": "ticktacktoe-ts-refactor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --watch '*.html' --watch '*.ts'",
+    "tsc": "tsc -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.0.4",
+    "nodemon": "^2.0.22"
+  }
+}
